@@ -1,0 +1,38 @@
+server:
+  port: 5000
+
+logging:
+  file:
+    path: ./logs
+    name: ${logging.file.path}/application.log
+  pattern:
+    console: "%green(%d{ISO8601}) %highlight(%-5level) [%blue(%t)] %yellow(%C{}): %msg%n%throwable"
+    file: "%d %p %C{} [%t] %m%n"
+  logback:
+    rollingpolicy:
+      fileNamePattern: ${logging.file.path}/archived/application-%d{yyy-MM-dd}.%i.log
+      max-file-size: 10MB
+  level:
+    root: WARN
+    com.sourceallies: DEBUG
+    org.flywaydb: INFO
+
+spring:
+  datasource:
+    username: ${DB_USER:localhost}
+    password: ${DB_PASS:password}
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://${POSTGRES_HOST:localhost}:5432/${DB_NAME:local}?stringtype=unspecified
+  flyway:
+    enabled: true
+    baseline-on-migrate: false
+    url: ${spring.datasource.url}
+    password: ${spring.datasource.password}
+    user: ${spring.datasource.username}
+    driver-class-name: ${spring.datasource.driver-class-name}
+  jackson:
+    deserialization:
+      fail-on-unknown-properties: false
+      read-unknown-enum-values-as-null: true
+    mapper:
+      accept-case-insensitive-enums: true
